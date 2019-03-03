@@ -3,9 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "lodash": "^4.17.11",
     "react": "^16.8.3",
     "react-dom": "^16.8.3",
-    "react-scripts": "2.1.5"
+    "react-scripts": "2.1.5",
+    "spotify-web-api-js": "^1.2.0"
   },
   "scripts": {
     "build:css": "postcss src/styles/index.css -o src/index.css",
