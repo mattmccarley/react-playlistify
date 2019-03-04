@@ -4,6 +4,8 @@ import SearchButton from './components/SearchButton';
 import Search from './components/Search';
 import ConnectWithSpotify from './components/ConnectWithSpotify';
 import Tunings from './components/Tunings';
+import TrackSeed from './components/TrackSeed';
+import ArtistSeed from './components/ArtistSeed';
 
 import {getHashParams} from './lib/helpers';
 import spotifyApi from './lib/spotifyApi';
@@ -12,32 +14,35 @@ class App extends Component {
   constructor(props) {
     super(props);
     const PARAMS = getHashParams();
-    const STATE_KEY = 'spotify_auth_state'
-
-    window.history.pushState({}, document.title, "/");
-
     this.state = {
       isSearching: false,
       isAuthenticated: false,
       accessToken: PARAMS.access_token,
-      authState: PARAMS.state,
-      storedAuthState: localStorage.getItem(STATE_KEY),
+      trackSeeds: [],
+      artistSeeds: [],
+      albumSeeds: [],
+      playlistSeeds: [],
     };
-
     this.toggleSearching = this.toggleSearching.bind(this);
-
-
-    if (this.state.accessToken && (this.state.authState === null || this.state.authState !== this.state.storedAuthState)) {
-      alert('There was an error during the authentication');
+    this.handleTrackSelection = this.handleTrackSelection.bind(this);
+    this.handleArtistSelection = this.handleArtistSelection.bind(this);
+    this.handleAlbumSelection = this.handleAlbumSelection.bind(this);
+    this.handlePlaylistSelection = this.handlePlaylistSelection.bind(this);
+  }
+  
+  componentWillMount() {
+    window.history.pushState({}, document.title, "/");
+    if (this.state.accessToken) {
+      this.setState({
+        isAuthenticated: true,
+      });
+      spotifyApi.setAccessToken(this.state.accessToken);
     } else {
-      localStorage.removeItem(STATE_KEY);
-      if (this.state.accessToken) {
-        this.state.isAuthenticated = true;
-        spotifyApi.setAccessToken(this.state.accessToken);
-      } else {
-        this.state.isAuthenticated = false;
-      }
+      this.setState({
+        isAuthenticated: false,
+      });
     }
+    
   }
 
   toggleSearching() {
@@ -46,8 +51,41 @@ class App extends Component {
     })
   }
 
-  
-  
+  handleTrackSelection(track) {
+    if (!this.state.trackSeeds.map(track => track.id).includes(track.id)) {
+      this.setState({
+        trackSeeds: [...this.state.trackSeeds, track],
+        isSearching: false,
+      });
+    }
+  }
+
+  handleArtistSelection(artist) {
+    if (!this.state.artistSeeds.includes(artist)) {
+      this.setState({
+        artistSeeds: [...this.state.artistSeeds, artist],
+        isSearching: false,
+      })
+    }
+  }
+
+  handleAlbumSelection(album) {
+    if (!this.state.albumSeeds.includes(album)) {
+      this.setState({
+        albumSeeds: [...this.state.albumSeeds, album],
+        isSearching: false,
+      })
+    }
+  }
+
+  handlePlaylistSelection(playlist) {
+    if (!this.state.playlistSeeds.includes(playlist)) {
+      this.setState({
+        playlistSeeds: [...this.state.playlistSeeds, playlist],
+        isSearching: false,
+      })
+    }
+  }
 
   render() {
     return (
@@ -70,33 +108,36 @@ class App extends Component {
               </div>
 
               {/* Seed Container */}
-              <div className="p-4 bg-white rounded-lg shadow-md w-2/5 ml-4">
+              <div className="p-4 bg-white rounded-lg shadow-md w-4/5 ml-4">
                 {!this.state.isSearching && (
                   <div className="flex flex-col items-center">
-                    <h3 className="mb-4 text-center">Seeds</h3>
+                    {
+                      <div className="flex flex-wrap w-full">
+                      {this.state.trackSeeds.length > 0 && this.state.trackSeeds.map(track => <TrackSeed track={track}/>)}
+                      {this.state.artistSeeds.length > 0 && this.state.artistSeeds.map(artist => <ArtistSeed artist={artist}/>)}
+                      {this.state.albumSeeds.length > 0 && this.state.albumSeeds.map(album => <p>{album.name}</p>)}
+                      {this.state.playlistSeeds.length > 0 && this.state.playlistSeeds.map(playlist => <p>{playlist.name}</p>)}
+                    </div>
+                    }
                     <SearchButton toggleSearching={this.toggleSearching}/>
                   </div>
                 )}
 
                 {/* This section is for the full-screen search overlay on add-seed */}
                 { this.state.isSearching && 
-                  <Search accessToken={this.state.accessToken} handleSearch={this.handleSearch} toggleSearching={this.toggleSearching}/>
+                  <Search accessToken={this.state.accessToken}
+                    handleSearch={this.handleSearch}
+                    toggleSearching={this.toggleSearching}
+                    handleTrackSelection={this.handleTrackSelection}
+                    handleArtistSelection={this.handleArtistSelection} 
+                    handleAlbumSelection={this.handleAlbumSelection} 
+                    handlePlaylistSelection={this.handlePlaylistSelection} />
                 }
-              </div>
-              
-              {/* Results Section */}
-              <div className="p-4 bg-white rounded-lg shadow-md w-2/5 ml-4">
-                <h3 className="text-center">Track List</h3>
               </div>
             </div>
           }        
-
           </div>
-
-          
         </div>
-
-
       </div>
     );
   }
