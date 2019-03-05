@@ -2,8 +2,7 @@ import React from 'react';
 
 const TrackResult = ({item, handleTrackSelection}) => {
   return (
-    <li key={item.id} 
-      className="w-1/2 flex items-center mb-4"
+    <li className="w-1/2 flex items-center mb-4 cursor-pointer"
       onClick={() => handleTrackSelection(item)}>
       <img className="w-16 h-16 mr-4"src={item.album.images[1] ? item.album.images[1].url : ''} alt=""/>
       <div>

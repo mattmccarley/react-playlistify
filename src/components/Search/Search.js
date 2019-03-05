@@ -7,7 +7,7 @@ import AlbumResult from './AlbumResult';
 import PlaylistResult from './PlaylistResult';
 
 import {debounce} from 'lodash';
-import spotifyApi from '../lib/spotifyApi';
+import spotifyApi from '../../lib/spotifyApi';
 
 
 class Search extends React.Component {
@@ -21,7 +21,7 @@ class Search extends React.Component {
     spotifyApi.setAccessToken(this.props.accessToken);
 
     this.handleSearch = this.handleSearch.bind(this);
-    this.searchSpotify = debounce(this.searchSpotify, 1000);
+    this.searchSpotify = debounce(this.searchSpotify, 500);
   }
 
   searchSpotify(value) {
@@ -58,6 +58,7 @@ class Search extends React.Component {
             <ul className="list-reset flex flex-wrap">
               {this.state.searchResults.tracks && this.state.searchResults.tracks.items.map(item => (
                 <TrackResult item={item}
+                  key={item.id}
                   handleTrackSelection={this.props.handleTrackSelection}/>
               ))}
             </ul>
@@ -66,7 +67,8 @@ class Search extends React.Component {
             <h3 className="mb-4">Artists</h3>
             <ul className="list-reset flex flex-wrap">
               {this.state.searchResults.artists && this.state.searchResults.artists.items.map(item => (
-                <ArtistResult item={item} 
+                <ArtistResult item={item}
+                  key={item.id} 
                   handleArtistSelection={this.props.handleArtistSelection} />
               ))}
             </ul>
@@ -75,7 +77,8 @@ class Search extends React.Component {
             <h3 className="mb-4">Albums</h3>
             <ul className="list-reset flex flex-wrap">
               {this.state.searchResults.albums && this.state.searchResults.albums.items.map(item => (
-                <AlbumResult item={item} 
+                <AlbumResult item={item}
+                  key={item.id} 
                   handleAlbumSelection={this.props.handleAlbumSelection} />
               ))}
             </ul>
@@ -85,6 +88,7 @@ class Search extends React.Component {
             <ul className="list-reset flex flex-wrap">
               {this.state.searchResults.playlists && this.state.searchResults.playlists.items.map(item => (
                 <PlaylistResult item={item}
+                  key={item.id}
                   handlePlaylistSelection={this.props.handlePlaylistSelection} />
               ))}
             </ul>

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const SearchButton = (props) => {
+const ToggleSearchButton = (props) => {
   return (
     <button className="bg-pink-lighter p-2 rounded-full shadow-md flex flex-col justify center mb-4"
       onClick={props.toggleSearching}>
@@ -9,4 +9,4 @@ const SearchButton = (props) => {
   )
 }
 
-export default SearchButton;
+export default ToggleSearchButton;

@@ -1,36 +1,92 @@
 import React from 'react';
 
-const Tunings = () => {
+const Tunings = ({handleTuningsAdjustment}) => {
   return (
     <div>
       <h3 className="mb-4 text-center">Tunings</h3>
       <div>
-        <p>acousticness</p>
-        <input className="w-full" type="range" name="acousticness" id=""/>
+        <label htmlFor="acousticness">acousticness</label>
+        <input className="w-full"
+          type="range"
+          name="acousticness"
+          id="acousticness"
+          min="0"
+          max="1"
+          step=".05"
+          onChange={(event) => handleTuningsAdjustment(event, 'acousticness')}
+          />
       </div>
       <div>
-        <p>danceability</p>
-        <input className="w-full" type="range" name="danceability" id=""/>
+        <label htmlFor="danceability">danceability</label>
+        <input className="w-full"
+          type="range"
+          name="danceability"
+          id="danceability"
+          min="0"
+          max="1"
+          step=".05"
+          onChange={(event) => handleTuningsAdjustment(event, 'danceability')}
+          />
       </div>
       <div>
-        <p>energy</p>
-        <input className="w-full" type="range" name="energy" id=""/>
+        <label htmlFor="energy">energy</label>
+        <input className="w-full"
+          type="range"
+          name="energy"
+          id="energy"
+          min="0"
+          max="1"
+          step=".05"
+          onChange={(event) => handleTuningsAdjustment(event, 'energy')}
+          />
       </div>
       <div>
-        <p>instrumentalness</p>
-        <input className="w-full" type="range" name="instrumentalness" id=""/>
+        <label htmlFor="instrumentalness">instrumentalness</label>
+        <input className="w-full"
+          type="range"
+          name="instrumentalness"
+          id="instrumentalness"
+          min="0"
+          max="1"
+          step=".05"
+          onChange={(event) => handleTuningsAdjustment(event, 'instrumentalness')}
+          />
       </div>
       <div>
-        <p>popularity</p>
-        <input className="w-full" type="range" name="popularity" id=""/>
+        <label htmlFor="popularity">popularity</label>
+        <input className="w-full"
+          type="range"
+          name="popularity"
+          id="popularity"
+          min="0"
+          max="100"
+          step="1"
+          onChange={(event) => handleTuningsAdjustment(event, 'popularity')}
+          />
       </div>
       <div>
-        <p>loudness</p>
-        <input className="w-full" type="range" name="loudness" id=""/>
+        <label htmlFor="loudness">loudness</label>
+        <input className="w-full"
+          type="range"
+          name="loudness"
+          id="loudness"
+          min="-60"
+          max="0"
+          step="1"
+          onChange={(event) => handleTuningsAdjustment(event, 'loudness')}
+          />
       </div>
       <div>
-        <p>valence</p>
-        <input className="w-full" type="range" name="valence" id=""/>
+        <label htmlFor="valence">valence</label>
+        <input className="w-full"
+          type="range"
+          name="valence"
+          id="valence"
+          min="0"
+          max="1"
+          step="0.05"
+          onChange={(event) => handleTuningsAdjustment(event, 'valence')}
+          />
       </div>
     </div>
   )

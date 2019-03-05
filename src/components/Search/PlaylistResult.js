@@ -2,8 +2,7 @@ import React from 'react';
 
 const PlaylistResult = ({item, handlePlaylistSelection}) => {
   return (
-    <li key={item.id}
-      className="w-1/2 flex items-center mb-4"
+    <li className="w-1/2 flex items-center mb-4 cursor-pointer"
       onClick={() => handlePlaylistSelection(item)} >
       <img className="w-16 h-16 mr-4"src={item.images[0] ? item.images[0].url : ''} alt=""/>
       <div>
