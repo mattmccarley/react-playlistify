@@ -7,7 +7,7 @@ import AlbumResult from './AlbumResult';
 import PlaylistResult from './PlaylistResult';
 
 import {debounce} from 'lodash';
-import spotifyApi from '../../lib/spotifyApi';
+import {spotifyApi} from '../../lib/spotifyApi';
 
 
 class Search extends React.Component {

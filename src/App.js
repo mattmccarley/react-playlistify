@@ -11,45 +11,9 @@ import AlbumSeed from './components/Seeds/AlbumSeed';
 import PlaylistSeed from './components/Seeds/PlaylistSeed';
 
 import {getHashParams} from './lib/helpers';
-import spotifyApi from './lib/spotifyApi';
-
-function collectTrackIdsFromSeeds(albumSeeds, playlistSeeds, trackSeeds) {
-  const trackIds = [];
-
-  albumSeeds.forEach((album) => {
-    const numberOfTracks = album.total_tracks;
-    const randomTrack = Math.floor(Math.random() * numberOfTracks);
-
-    spotifyApi.getAlbumTracks(album.id, {
-      limit: 1,
-      offset: randomTrack,
-    })
-    .then(function(data) {
-      trackIds.push(data.items[0].id);
-    }, function(err) {
-      console.error(err);
-    });
-  })
-
-  playlistSeeds.forEach((playlist) => {
-    const numberOfTracks = playlist.tracks.total;
-    const randomTrack = Math.floor(Math.random() * numberOfTracks);
-
-    spotifyApi.getPlaylistTracks(playlist.id, {
-      limit: 1,
-      offset: randomTrack,
-    })
-    .then(function(data) {
-      trackIds.push(data.items[0].track.id);
-    }, function(err) {
-      console.error(err);
-    });
-  })
+import {spotifyApi, collectTrackIdsFromSeeds} from './lib/spotifyApi';
 
 
-  console.log('trackIds', trackIds);
-  return trackIds;
-}
 
 class App extends Component {
   constructor(props) {
@@ -71,6 +35,9 @@ class App extends Component {
       loudness: null,
       valence: null,
       recommendations: [],
+      trackIds: [],
+      artistIds: [],
+      recommendedTrackList: null,
     };
     this.toggleSearching = this.toggleSearching.bind(this);
     this.handleTrackSelection = this.handleTrackSelection.bind(this);
@@ -104,37 +71,37 @@ class App extends Component {
 
   handleTrackSelection(track) {
     if (!this.state.trackSeeds.map(track => track.id).includes(track.id)) {
-      this.setState({
-        trackSeeds: [...this.state.trackSeeds, track],
+      this.setState(prevState => ({
+        trackSeeds: [...prevState.trackSeeds, track],
         isSearching: false,
-      });
+      }));
     }
   }
 
   handleArtistSelection(artist) {
     if (!this.state.artistSeeds.includes(artist)) {
-      this.setState({
-        artistSeeds: [...this.state.artistSeeds, artist],
+      this.setState(prevState => ({
+        artistSeeds: [...prevState.artistSeeds, artist],
         isSearching: false,
-      })
+      }));
     }
   }
 
   handleAlbumSelection(album) {
     if (!this.state.albumSeeds.includes(album)) {
-      this.setState({
-        albumSeeds: [...this.state.albumSeeds, album],
+      this.setState(prevState => ({
+        albumSeeds: [...prevState.albumSeeds, album],
         isSearching: false,
-      })
+      }));
     }
   }
 
   handlePlaylistSelection(playlist) {
     if (!this.state.playlistSeeds.includes(playlist)) {
-      this.setState({
-        playlistSeeds: [...this.state.playlistSeeds, playlist],
+      this.setState(prevState => ({
+        playlistSeeds: [...prevState.playlistSeeds, playlist],
         isSearching: false,
-      })
+      }));
     }
   }
 
@@ -147,8 +114,27 @@ class App extends Component {
     this.setState(updatedState);
   }
 
-  handleGettingRecommendations() {
-    collectTrackIdsFromSeeds(this.state.albumSeeds, this.state.playlistSeeds, this.state.trackSeeds);
+  async handleGettingRecommendations() {
+    const trackIds = await collectTrackIdsFromSeeds(this.state.albumSeeds, this.state.playlistSeeds, this.state.trackSeeds);
+    const artistIds = this.state.artistSeeds.map(artist => artist.id);
+    this.setState({
+      trackIds,
+      artistIds,
+    });
+  
+    spotifyApi.getRecommendations({
+      seed_artists: this.state.artistIds,
+      seed_tracks: this.state.trackIds,
+    })
+      .then((data) => {
+        console.log(data);
+        this.setState({
+          recommendedTrackList: data.tracks,
+        })
+      }, (err) => {
+        console.error(err);
+      });
+
   }
 
   render() {
