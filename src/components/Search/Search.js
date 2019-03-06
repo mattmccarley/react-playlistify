@@ -41,7 +41,7 @@ class Search extends React.Component {
 
   render() {
     return (
-      <div className="p-4 absolute pin bg-grey-light">
+      <div className="p-4 absolute pin bg-grey-lighter">
         <div className="container mx-auto flex mb-4">
           <SearchBox handleSearch={this.handleSearch} />
           <button 

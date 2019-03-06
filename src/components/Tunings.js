@@ -12,7 +12,7 @@ const Tunings = ({handleTuningsAdjustment}) => {
           id="acousticness"
           min="0"
           max="1"
-          step=".05"
+          step=".01"
           onChange={(event) => handleTuningsAdjustment(event, 'acousticness')}
           />
       </div>
@@ -24,7 +24,7 @@ const Tunings = ({handleTuningsAdjustment}) => {
           id="danceability"
           min="0"
           max="1"
-          step=".05"
+          step=".01"
           onChange={(event) => handleTuningsAdjustment(event, 'danceability')}
           />
       </div>
@@ -36,7 +36,7 @@ const Tunings = ({handleTuningsAdjustment}) => {
           id="energy"
           min="0"
           max="1"
-          step=".05"
+          step=".01"
           onChange={(event) => handleTuningsAdjustment(event, 'energy')}
           />
       </div>
@@ -48,7 +48,7 @@ const Tunings = ({handleTuningsAdjustment}) => {
           id="instrumentalness"
           min="0"
           max="1"
-          step=".05"
+          step=".01"
           onChange={(event) => handleTuningsAdjustment(event, 'instrumentalness')}
           />
       </div>
@@ -84,7 +84,7 @@ const Tunings = ({handleTuningsAdjustment}) => {
           id="valence"
           min="0"
           max="1"
-          step="0.05"
+          step="0.01"
           onChange={(event) => handleTuningsAdjustment(event, 'valence')}
           />
       </div>

@@ -4,21 +4,19 @@ import ToggleSearchButton from './components/ToggleSearchButton';
 import Search from './components/Search/Search';
 import ConnectWithSpotify from './components/ConnectWithSpotify';
 import Tunings from './components/Tunings';
+import Seeds from './components/Seeds/Seeds';
+import TrackList from './components/TrackList';
 
-import TrackSeed from './components/Seeds/TrackSeed';
-import ArtistSeed from './components/Seeds/ArtistSeed';
-import AlbumSeed from './components/Seeds/AlbumSeed';
-import PlaylistSeed from './components/Seeds/PlaylistSeed';
-
+import {debounce} from 'lodash';
 import {getHashParams} from './lib/helpers';
 import {spotifyApi, collectTrackIdsFromSeeds} from './lib/spotifyApi';
-
-
 
 class App extends Component {
   constructor(props) {
     super(props);
+
     const PARAMS = getHashParams();
+
     this.state = {
       isSearching: false,
       isAuthenticated: false,
@@ -44,13 +42,16 @@ class App extends Component {
 
       recommendedTrackList: null,
     };
+
     this.toggleSearching = this.toggleSearching.bind(this);
     this.handleTrackSelection = this.handleTrackSelection.bind(this);
     this.handleArtistSelection = this.handleArtistSelection.bind(this);
     this.handleAlbumSelection = this.handleAlbumSelection.bind(this);
     this.handlePlaylistSelection = this.handlePlaylistSelection.bind(this);
     this.handleTuningsAdjustment = this.handleTuningsAdjustment.bind(this);
-    this.handleGettingRecommendations = this.handleGettingRecommendations.bind(this);
+
+    this.handleRecommendations = this.handleRecommendations.bind(this);
+    this.getRecommendationsFromSpotify = debounce(this.getRecommendationsFromSpotify, 1000);
   }
   
   componentWillMount() {
@@ -80,6 +81,7 @@ class App extends Component {
         trackSeeds: [...prevState.trackSeeds, track],
         isSearching: false,
       }));
+      this.handleRecommendations();
     }
   }
 
@@ -89,6 +91,7 @@ class App extends Component {
         artistSeeds: [...prevState.artistSeeds, artist],
         isSearching: false,
       }));
+      this.handleRecommendations();
     }
   }
 
@@ -98,6 +101,7 @@ class App extends Component {
         albumSeeds: [...prevState.albumSeeds, album],
         isSearching: false,
       }));
+      this.handleRecommendations();
     }
   }
 
@@ -107,6 +111,7 @@ class App extends Component {
         playlistSeeds: [...prevState.playlistSeeds, playlist],
         isSearching: false,
       }));
+      this.handleRecommendations();
     }
   }
 
@@ -115,11 +120,11 @@ class App extends Component {
       tunings: null
     };
     updatedState[type] = event.target.value;
-
     this.setState(updatedState);
+    this.handleRecommendations();
   }
 
-  async handleGettingRecommendations() {
+  async getRecommendationsFromSpotify() {
     const trackIds = await collectTrackIdsFromSeeds(this.state.albumSeeds, this.state.playlistSeeds, this.state.trackSeeds);
     const artistIds = this.state.artistSeeds.map(artist => artist.id);
     this.setState({
@@ -163,7 +168,10 @@ class App extends Component {
       }, (err) => {
         console.error(err);
       });
+  }
 
+  handleRecommendations() {
+    this.getRecommendationsFromSpotify();
   }
 
   render() {
@@ -171,7 +179,7 @@ class App extends Component {
       <div>
         <div className="bg-pink-lighter p-4">
           <div className="container mx-auto">
-            <p>playlistify.me</p>
+            <h1>playlistify.me</h1>
           </div>
         </div>
         <div className="relative min-h-screen bg-grey-lighter">
@@ -185,61 +193,33 @@ class App extends Component {
               <div className="flex mb-4">
                 <div className="p-4 bg-white rounded-lg shadow-md w-1/5">
                   <Tunings handleTuningsAdjustment={this.handleTuningsAdjustment} />
-                  </div>
-  
-                  <div className="p-4 bg-white rounded-lg shadow-md w-4/5 ml-4">
-                    {!this.state.isSearching && (
-                      <div className="flex flex-col items-center">
-                        {
-                        <div>
-                          <h3 className="mb-4">Seeds</h3>
-                          <div className="flex flex-wrap w-full">
-                            {this.state.trackSeeds.length > 0 && this.state.trackSeeds.map(track => <TrackSeed key={track.id} track={track} />)}
-                            {this.state.artistSeeds.length > 0 && this.state.artistSeeds.map(artist => <ArtistSeed key={artist.id} artist={artist} />)}
-                            {this.state.albumSeeds.length > 0 && this.state.albumSeeds.map(album => <AlbumSeed key={album.id} album={album} />)}
-                            {this.state.playlistSeeds.length > 0 && this.state.playlistSeeds.map(playlist => <PlaylistSeed key={playlist.id} playlist={playlist} />)}
-                          </div>
-                        </div>
-                        }
-                        <ToggleSearchButton toggleSearching={this.toggleSearching}/>
-                      </div>
-                    )}
-  
-                    {/* This section is for the full-screen search overlay on add-seed */}
-                    { this.state.isSearching && 
-                      <Search accessToken={this.state.accessToken}
-                        toggleSearching={this.toggleSearching}
-                        handleTrackSelection={this.handleTrackSelection}
-                        handleArtistSelection={this.handleArtistSelection} 
-                        handleAlbumSelection={this.handleAlbumSelection} 
-                        handlePlaylistSelection={this.handlePlaylistSelection} />
-                    }
-                  </div>
-                  <div>
-                  <button onClick={this.handleGettingRecommendations}>Generate Playlist</button>
+                </div>
+                <div className="p-4 bg-white rounded-lg shadow-md w-3/5 ml-4">
+                  {!this.state.isSearching && (
+                    <div className="flex flex-col items-center">
+                      <Seeds trackSeeds={this.state.trackSeeds}
+                        artistSeeds={this.state.artistSeeds}
+                        albumSeeds={this.state.albumSeeds}
+                        playlistSeeds={this.state.playlistSeeds} />
+                      <ToggleSearchButton toggleSearching={this.toggleSearching}/>
+                    </div>
+                  )}
+
+                  { this.state.isSearching && 
+                    <Search accessToken={this.state.accessToken}
+                      toggleSearching={this.toggleSearching}
+                      handleTrackSelection={this.handleTrackSelection}
+                      handleArtistSelection={this.handleArtistSelection} 
+                      handleAlbumSelection={this.handleAlbumSelection} 
+                      handlePlaylistSelection={this.handlePlaylistSelection} />
+                  }
+                </div>
+                <div className="p-4 bg-white rounded-lg shadow-md w-1/5 ml-4">
+                  <h3 className="mb-4 text-center">Player</h3>
                 </div>
               </div>
-              <div>
-                <h3 className="mb-4">Track List</h3>
-                <ul className="list-reset">
-                  {this.state.recommendedTrackList && this.state.recommendedTrackList.map((track) => {
-                    return (
-                      <li className="bg-grey-lightest rounded shadow-md flex items-center justify-between p-4 mb-4" key={track.id}>
-                        <div className="flex items-center">
-                          <img className="w-16 h-16 mr-4"
-                            src={track.album.images[1] ? track.album.images[1].url : ''}
-                            alt=""/>
-                          <div>
-                            <p className="font-semibold">{track.name}</p>
-                            <p className="font-thin">{track.artists[0].name}</p>
-                          </div>
-                        </div>
-                        <audio src={track.preview_url} controls preload="none"></audio>
-                      </li>
-                    )
-                  })}
-                </ul>
-              </div>
+              
+              <TrackList recommendedTrackList={this.state.recommendedTrackList} />
             </div>
           }   
 
