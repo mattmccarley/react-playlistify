@@ -41,6 +41,9 @@ class App extends Component {
       artistIds: [],
 
       recommendedTrackList: null,
+
+      devices: [],
+      chosenDevice: null,
     };
 
     this.toggleSearching = this.toggleSearching.bind(this);
@@ -49,6 +52,9 @@ class App extends Component {
     this.handleAlbumSelection = this.handleAlbumSelection.bind(this);
     this.handlePlaylistSelection = this.handlePlaylistSelection.bind(this);
     this.handleTuningsAdjustment = this.handleTuningsAdjustment.bind(this);
+    this.handleGettingSpotifyDevices = this.handleGettingSpotifyDevices.bind(this);
+    this.handleSelectingDevice = this.handleSelectingDevice.bind(this);
+    this.handleSendingTracksToDevice = this.handleSendingTracksToDevice.bind(this);
 
     this.handleRecommendations = this.handleRecommendations.bind(this);
     this.getRecommendationsFromSpotify = debounce(this.getRecommendationsFromSpotify, 1000);
@@ -174,6 +180,31 @@ class App extends Component {
     this.getRecommendationsFromSpotify();
   }
 
+  handleGettingSpotifyDevices() {
+    spotifyApi.getMyDevices()
+      .then((data) => {
+        this.setState({
+          devices: data.devices,
+        })
+      }, (err) => {
+        console.error(err);
+      })
+  }
+
+  handleSendingTracksToDevice() {
+    spotifyApi.play({
+      device_id: this.state.chosenDevice,
+      uris: this.state.recommendedTrackList.map(track => `spotify:track:${track.id}`),
+    })
+  }
+
+  handleSelectingDevice(event) {
+    this.setState({
+      chosenDevice: event.target.value,
+    })
+    
+  }
+
   render() {
     return (
       <div>
@@ -216,6 +247,19 @@ class App extends Component {
                 </div>
                 <div className="p-4 bg-white rounded-lg shadow-md w-1/5 ml-4">
                   <h3 className="mb-4 text-center">Player</h3>
+                  <select id="device-select"
+                    onClick={this.handleGettingSpotifyDevices}
+                    onChange={this.handleSelectingDevice}>
+                    <option value="">--Choose a device--</option>
+                    {this.state.devices.length && this.state.devices.map((device) => {
+                      return (
+                        <option value={device.id}>{device.name}</option>
+                      )
+                    })}
+
+                  </select>
+                  <button className="bg-pink-lighter rounded p-4 shadow-md"
+                    onClick={this.handleSendingTracksToDevice}>Send Tracks to Device</button>
                 </div>
               </div>
               
