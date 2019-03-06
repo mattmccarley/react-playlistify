@@ -221,10 +221,10 @@ class App extends Component {
               </div>
               <div>
                 <h3 className="mb-4">Track List</h3>
-                <ul>
+                <ul className="list-reset">
                   {this.state.recommendedTrackList && this.state.recommendedTrackList.map((track) => {
                     return (
-                      <li className="list-reset bg-grey-lightest rounded shadow-md flex items-center justify-between p-4 mb-4" key={track.id}>
+                      <li className="bg-grey-lightest rounded shadow-md flex items-center justify-between p-4 mb-4" key={track.id}>
                         <div className="flex items-center">
                           <img className="w-16 h-16 mr-4"
                             src={track.album.images[1] ? track.album.images[1].url : ''}
