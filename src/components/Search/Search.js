@@ -27,7 +27,6 @@ class Search extends React.Component {
   searchSpotify(value) {
     spotifyApi.search(value, ['album', 'artist', 'playlist', 'track'], { limit: 4})
       .then((data) => {
-        console.log('Search', data);
         this.setState({
           searchResults: data,
         })
