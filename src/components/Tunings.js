@@ -27,12 +27,14 @@ class Tunings extends React.Component {
   
   render() {
     const { handleTuningsAdjustment } = this.props;
+    const inactiveButtonClasses = "bg-grey-lighter shadow-md rounded p-2 w-full mb-4";
+    const activeButtonClasses = "bg-pink-lighter shadow-md rounded p-2 w-full mb-4";
     
     return (
       <div>
         <h3 className="mb-4 text-center">Tunings</h3>
         <div>
-          <button className="bg-grey-lighter shadow-md rounded p-4 w-full mb-4"
+          <button className={this.state.isAcousticness ? activeButtonClasses : inactiveButtonClasses}
             onClick={this.handleTuningsToggle}>
             Acousticness
           </button>
@@ -49,7 +51,7 @@ class Tunings extends React.Component {
           )}
         </div>
         <div>
-          <button className="bg-grey-lighter shadow-md rounded p-4 w-full mb-4"
+          <button className={this.state.isDanceability ? activeButtonClasses : inactiveButtonClasses}
             onClick={this.handleTuningsToggle}>
             Danceability
           </button>
@@ -66,7 +68,7 @@ class Tunings extends React.Component {
           )}
         </div>
         <div>
-          <button className="bg-grey-lighter shadow-md rounded p-4 w-full mb-4"
+          <button className={this.state.isEnergy ? activeButtonClasses : inactiveButtonClasses}
             onClick={this.handleTuningsToggle}>
             Energy
           </button>
@@ -83,7 +85,7 @@ class Tunings extends React.Component {
           )}
         </div>
         <div>
-          <button className="bg-grey-lighter shadow-md rounded p-4 w-full mb-4"
+          <button className={this.state.isInstrumentalness ? activeButtonClasses : inactiveButtonClasses}
             onClick={this.handleTuningsToggle}>
             Instrumentalness
           </button>
@@ -100,7 +102,7 @@ class Tunings extends React.Component {
             )}
         </div>
         <div>
-          <button className="bg-grey-lighter shadow-md rounded p-4 w-full mb-4"
+          <button className={this.state.isPopularity ? activeButtonClasses : inactiveButtonClasses}
             onClick={this.handleTuningsToggle}>
             Popularity
           </button>
@@ -117,7 +119,7 @@ class Tunings extends React.Component {
           )}
         </div>
         <div>
-          <button className="bg-grey-lighter shadow-md rounded p-4 w-full mb-4"
+          <button className={this.state.isLoudness ? activeButtonClasses : inactiveButtonClasses}
             onClick={this.handleTuningsToggle}>
             Loudness
           </button>
@@ -134,7 +136,7 @@ class Tunings extends React.Component {
           )}
         </div>
         <div>
-          <button className="bg-grey-lighter shadow-md rounded p-4 w-full mb-4"
+          <button className={this.state.isValence ? activeButtonClasses : inactiveButtonClasses}
             onClick={this.handleTuningsToggle}>
             Valence
           </button>

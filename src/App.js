@@ -6,6 +6,7 @@ import ConnectWithSpotify from './components/ConnectWithSpotify';
 import Tunings from './components/Tunings';
 import Seeds from './components/Seeds/Seeds';
 import TrackList from './components/TrackList';
+import Player from './components/Player';
 
 import {debounce} from 'lodash';
 import {getHashParams} from './lib/helpers';
@@ -164,16 +165,16 @@ class App extends Component {
     if (this.state.valence) {
       recommendationsOptions.target_valence = this.state.valence;
     }
-  
-    spotifyApi.getRecommendations(recommendationsOptions)
-      .then((data) => {
-        console.log(data);
-        this.setState({
-          recommendedTrackList: data.tracks,
-        })
-      }, (err) => {
-        console.error(err);
-      });
+    if (recommendationsOptions.seed_artists.length > 0 || recommendationsOptions.seed_tracks.length > 0) {
+      spotifyApi.getRecommendations(recommendationsOptions)
+        .then((data) => {
+          this.setState({
+            recommendedTrackList: data.tracks,
+          })
+        }, (err) => {
+          console.error(err);
+        });
+    }
   }
 
   handleRecommendations() {
@@ -193,14 +194,17 @@ class App extends Component {
 
   handleSendingTracksToDevice() {
     spotifyApi.play({
-      device_id: this.state.chosenDevice,
+      device_id: this.state.chosenDevice.id,
       uris: this.state.recommendedTrackList.map(track => `spotify:track:${track.id}`),
     })
   }
 
-  handleSelectingDevice(event) {
+  handleSelectingDevice(device) {
     this.setState({
-      chosenDevice: event.target.value,
+      chosenDevice: {
+        id: device.id,
+        name: device.name,
+      }
     })
     
   }
@@ -245,28 +249,15 @@ class App extends Component {
                       handlePlaylistSelection={this.handlePlaylistSelection} />
                   }
                 </div>
-                <div className="p-4 bg-white rounded-lg shadow-md w-1/5 ml-4">
-                  <h3 className="mb-4 text-center">Player</h3>
-                  <select id="device-select"
-                    onClick={this.handleGettingSpotifyDevices}
-                    onChange={this.handleSelectingDevice}>
-                    <option value="">--Choose a device--</option>
-                    {this.state.devices.length && this.state.devices.map((device) => {
-                      return (
-                        <option value={device.id}>{device.name}</option>
-                      )
-                    })}
-
-                  </select>
-                  <button className="bg-pink-lighter rounded p-4 shadow-md"
-                    onClick={this.handleSendingTracksToDevice}>Send Tracks to Device</button>
-                </div>
+                <Player handleGettingSpotifyDevices={this.handleGettingSpotifyDevices}
+                  handleSelectingDevice={this.handleSelectingDevice}
+                  handleSendingTracksToDevice={this.handleSendingTracksToDevice}
+                  devices={this.state.devices}
+                  chosenDevice={this.state.chosenDevice}/>
               </div>
-              
               <TrackList recommendedTrackList={this.state.recommendedTrackList} />
             </div>
-          }   
-
+          }
           </div>
         </div>
       </div>
