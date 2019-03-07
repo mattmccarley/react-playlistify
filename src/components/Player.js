@@ -47,9 +47,9 @@ class Player extends React.Component {
             </ul>
           )}
         </div>
-        <button className="bg-pink-lighter rounded p-4 shadow-md"
+        <button className="bg-pink-lighter rounded p-4 shadow-md w-full"
           onClick={this.props.handleSendingTracksToDevice}>
-          Send Tracks to Device
+          Play Track List
         </button>
       </div>
     )
