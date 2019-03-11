@@ -39,6 +39,9 @@ class App extends Component {
       isLoudness: false,
       isValence: false,
 
+      topTracks: null,
+      topArtists: null,
+
       trackSeeds: [],
       artistSeeds: [],
       albumSeeds: [],
@@ -66,9 +69,11 @@ class App extends Component {
     this.handleGettingSpotifyDevices = this.handleGettingSpotifyDevices.bind(this);
     this.handleSelectingDevice = this.handleSelectingDevice.bind(this);
     this.handleSendingTracksToDevice = this.handleSendingTracksToDevice.bind(this);
-
     this.handleRecommendations = this.handleRecommendations.bind(this);
+
     this.getRecommendationsFromSpotify = debounce(this.getRecommendationsFromSpotify, 500);
+    this.getTopTracksFromSpotify = this.getTopTracksFromSpotify.bind(this);
+    this.getTopArtistsFromSpotify = this.getTopArtistsFromSpotify.bind(this);
   }
   
   componentWillMount() {
@@ -86,10 +91,63 @@ class App extends Component {
     
   }
 
+  async getTopTracksFromSpotify() {
+    if (this.state.topTracks === null) {
+      const shortTermTracks = await spotifyApi.getMyTopTracks({
+        limit: 9,
+        time_range: 'short_term'
+      });
+      // const mediumTermTracks = await spotifyApi.getMyTopTracks({
+      //   limit: 3,
+      //   time_range: 'medium_term'
+      // });
+      // const longTermTracks = await spotifyApi.getMyTopTracks({
+      //   limit: 3,
+      //   time_range: 'long_term'
+      // });
+  
+      this.setState({
+        topTracks: [
+          ...shortTermTracks.items,
+          // ...mediumTermTracks.items,
+          // ...longTermTracks.items
+        ]
+      });
+    }
+  }
+
+  async getTopArtistsFromSpotify() {
+    if (this.state.topArtists === null) {
+      const shortTermArtists = await spotifyApi.getMyTopArtists({
+        limit: 9,
+        time_range: 'short_term'
+      });
+      // const mediumTermArtists = await spotifyApi.getMyTopArtists({
+      //   limit: 3,
+      //   time_range: 'medium_term'
+      // });
+      // const longTermArtists = await spotifyApi.getMyTopArtists({
+      //   limit: 3,
+      //   time_range: 'long_term'
+      // });
+  
+      this.setState({
+        topArtists: [
+          ...shortTermArtists.items,
+          // ...mediumTermArtists.items,
+          // ...longTermArtists.items
+        ]
+      });
+    }
+  }
+
   toggleSearching() {
     this.setState({
       isSearching: !this.state.isSearching,
-    })
+    });
+
+    this.getTopTracksFromSpotify();
+    this.getTopArtistsFromSpotify();
   }
 
   handleSeedRemoval(seed, seedType) {
@@ -282,6 +340,8 @@ class App extends Component {
                   { this.state.isSearching && 
                     <Search accessToken={this.state.accessToken}
                       toggleSearching={this.toggleSearching}
+                      topTracks={this.state.topTracks}
+                      topArtists={this.state.topArtists}
                       handleTrackSelection={this.handleTrackSelection}
                       handleArtistSelection={this.handleArtistSelection} 
                       handleAlbumSelection={this.handleAlbumSelection} 
