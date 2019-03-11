@@ -1,19 +1,16 @@
 import React from 'react';
 
-import TrackSeed from './TrackSeed';
-import ArtistSeed from './ArtistSeed';
-import AlbumSeed from './AlbumSeed';
-import PlaylistSeed from './PlaylistSeed';
+import SeedItem from './SeedItem';
 
-const Seeds = ({trackSeeds, artistSeeds, albumSeeds, playlistSeeds}) => {
+const Seeds = ({trackSeeds, artistSeeds, albumSeeds, playlistSeeds, handleSeedRemoval}) => {
   return (
     <div>
       <h3 className="mb-4 text-center">Seeds</h3>
       <div className="flex flex-wrap w-full">
-        {trackSeeds.length > 0 && trackSeeds.map(track => <TrackSeed key={track.id} track={track} />)}
-        {artistSeeds.length > 0 && artistSeeds.map(artist => <ArtistSeed key={artist.id} artist={artist} />)}
-        {albumSeeds.length > 0 && albumSeeds.map(album => <AlbumSeed key={album.id} album={album} />)}
-        {playlistSeeds.length > 0 && playlistSeeds.map(playlist => <PlaylistSeed key={playlist.id} playlist={playlist} />)}
+        {trackSeeds.length > 0 && trackSeeds.map(track => <SeedItem key={track.id} seed={track} seedType='track' handleSeedRemoval={handleSeedRemoval}/>)}
+        {artistSeeds.length > 0 && artistSeeds.map(artist => <SeedItem key={artist.id} seed={artist} seedType='artist' handleSeedRemoval={handleSeedRemoval}/>)}
+        {albumSeeds.length > 0 && albumSeeds.map(album => <SeedItem key={album.id} seed={album} seedType='album' handleSeedRemoval={handleSeedRemoval}/>)}
+        {playlistSeeds.length > 0 && playlistSeeds.map(playlist => <SeedItem key={playlist.id} seed={playlist} seedType='playlist' handleSeedRemoval={handleSeedRemoval}/>)}
       </div>
     </div>
   )

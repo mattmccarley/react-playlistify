@@ -30,6 +30,14 @@ class App extends Component {
       popularity: null,
       loudness: null,
       valence: null,
+      
+      isAcousticness: false,
+      isDanceability: false,
+      isEnergy: false,
+      isInstrumentalness: false,
+      isPopularity: false,
+      isLoudness: false,
+      isValence: false,
 
       trackSeeds: [],
       artistSeeds: [],
@@ -48,17 +56,19 @@ class App extends Component {
     };
 
     this.toggleSearching = this.toggleSearching.bind(this);
+    this.handleSeedRemoval = this.handleSeedRemoval.bind(this);
     this.handleTrackSelection = this.handleTrackSelection.bind(this);
     this.handleArtistSelection = this.handleArtistSelection.bind(this);
     this.handleAlbumSelection = this.handleAlbumSelection.bind(this);
     this.handlePlaylistSelection = this.handlePlaylistSelection.bind(this);
+    this.handleTuningsToggle = this.handleTuningsToggle.bind(this);
     this.handleTuningsAdjustment = this.handleTuningsAdjustment.bind(this);
     this.handleGettingSpotifyDevices = this.handleGettingSpotifyDevices.bind(this);
     this.handleSelectingDevice = this.handleSelectingDevice.bind(this);
     this.handleSendingTracksToDevice = this.handleSendingTracksToDevice.bind(this);
 
     this.handleRecommendations = this.handleRecommendations.bind(this);
-    this.getRecommendationsFromSpotify = debounce(this.getRecommendationsFromSpotify, 1000);
+    this.getRecommendationsFromSpotify = debounce(this.getRecommendationsFromSpotify, 500);
   }
   
   componentWillMount() {
@@ -80,6 +90,14 @@ class App extends Component {
     this.setState({
       isSearching: !this.state.isSearching,
     })
+  }
+
+  handleSeedRemoval(seed, seedType) {
+    const seedLocation = `${seedType}Seeds`;
+    const newState = {};
+    newState[seedLocation] = this.state[seedLocation].filter(item => item.id !== seed.id);
+    this.setState(newState);
+    this.handleRecommendations();
   }
 
   handleTrackSelection(track) {
@@ -123,12 +141,19 @@ class App extends Component {
   }
 
   handleTuningsAdjustment(event, type) {
-    const updatedState = {
-      tunings: null
-    };
+    const updatedState = {};
     updatedState[type] = event.target.value;
     this.setState(updatedState);
     this.handleRecommendations();
+  }
+
+  handleTuningsToggle(event) {
+    const tuningType = event.target.innerText.toLowerCase();
+    const tuningTypeToggle = `is${event.target.innerText}`;
+    const newState = {}
+    newState[tuningTypeToggle] = !this.state[tuningTypeToggle];
+    newState[tuningType] = null;
+    this.setState(newState);
   }
 
   async getRecommendationsFromSpotify() {
@@ -174,6 +199,10 @@ class App extends Component {
         }, (err) => {
           console.error(err);
         });
+    } else {
+      this.setState({
+        recommendedTrackList: []
+      })
     }
   }
 
@@ -227,7 +256,16 @@ class App extends Component {
             <div>
               <div className="flex mb-4">
                 <div className="p-4 bg-white rounded-lg shadow-md w-1/5">
-                  <Tunings handleTuningsAdjustment={this.handleTuningsAdjustment} />
+                  <Tunings handleTuningsAdjustment={this.handleTuningsAdjustment}
+                    handleTuningsToggle={this.handleTuningsToggle} 
+                    isAcousticness={this.state.isAcousticness}
+                    isDanceability={this.state.isDanceability}
+                    isEnergy={this.state.isEnergy}
+                    isInstrumentalness={this.state.isInstrumentalness}
+                    isLoudness={this.state.isLoudness}
+                    isPopularity={this.state.isPopularity}
+                    isValence={this.state.isValence}
+                    />
                 </div>
                 <div className="p-4 bg-white rounded-lg shadow-md w-3/5 ml-4">
                   {!this.state.isSearching && (
@@ -235,7 +273,8 @@ class App extends Component {
                       <Seeds trackSeeds={this.state.trackSeeds}
                         artistSeeds={this.state.artistSeeds}
                         albumSeeds={this.state.albumSeeds}
-                        playlistSeeds={this.state.playlistSeeds} />
+                        playlistSeeds={this.state.playlistSeeds} 
+                        handleSeedRemoval={this.handleSeedRemoval}/>
                       <ToggleSearchButton toggleSearching={this.toggleSearching}/>
                     </div>
                   )}

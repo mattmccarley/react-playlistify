@@ -6188,6 +6188,16 @@ body {
   background-color: #f8fafc;
 }
 
+.seed-item-cancel-button {
+  -webkit-transition: visibility 250ms, opacity 250ms;
+  transition: visibility 250ms, opacity 250ms;
+}
+
+.seed-item:hover .seed-item-cancel-button {
+  visibility: visible;
+  opacity: 1;
+}
+
 @media (min-width: 576px) {
   .sm\:list-reset {
     list-style: none;
