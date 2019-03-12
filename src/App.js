@@ -22,6 +22,7 @@ class App extends Component {
       isSearching: false,
       isAuthenticated: false,
       accessToken: PARAMS.access_token,
+      spotifyUserInfo: null,
 
       acousticness: null,
       danceability: null,
@@ -70,6 +71,7 @@ class App extends Component {
     this.handleSelectingDevice = this.handleSelectingDevice.bind(this);
     this.handleSendingTracksToDevice = this.handleSendingTracksToDevice.bind(this);
     this.handleRecommendations = this.handleRecommendations.bind(this);
+    this.getUserInfoFromSpotify = this.getUserInfoFromSpotify.bind(this);
 
     this.getRecommendationsFromSpotify = debounce(this.getRecommendationsFromSpotify, 500);
     this.getTopTracksFromSpotify = this.getTopTracksFromSpotify.bind(this);
@@ -88,6 +90,8 @@ class App extends Component {
         isAuthenticated: false,
       });
     }
+
+    this.getUserInfoFromSpotify();
     
   }
 
@@ -139,6 +143,18 @@ class App extends Component {
         ]
       });
     }
+  }
+
+  getUserInfoFromSpotify() {
+    spotifyApi.getMe()
+      .then(data => {
+        console.log(data);
+        this.setState({
+          spotifyUserInfo: data
+        });
+      }, err => {
+        console.error(err);
+      });
   }
 
   toggleSearching() {
@@ -352,7 +368,8 @@ class App extends Component {
                   handleSelectingDevice={this.handleSelectingDevice}
                   handleSendingTracksToDevice={this.handleSendingTracksToDevice}
                   devices={this.state.devices}
-                  chosenDevice={this.state.chosenDevice}/>
+                  chosenDevice={this.state.chosenDevice}
+                  spotifyUserInfo={this.state.spotifyUserInfo} />
               </div>
               <TrackList recommendedTrackList={this.state.recommendedTrackList} />
             </div>
