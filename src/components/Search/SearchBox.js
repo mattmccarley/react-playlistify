@@ -5,7 +5,7 @@ const SearchBox = (props) => {
     <input className="p-2 rounded shadow-md w-full"
       type="text"
       placeholder="search..."
-      onChange={props.handleSearch}/>
+      onChange={props.handleSearch} />
   )
 }
 

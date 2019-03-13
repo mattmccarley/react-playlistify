@@ -22,6 +22,7 @@ class App extends Component {
       isSearching: false,
       isAuthenticated: false,
       accessToken: PARAMS.access_token,
+      spotifyUserInfo: null,
 
       acousticness: null,
       danceability: null,
@@ -56,6 +57,9 @@ class App extends Component {
 
       devices: [],
       chosenDevice: null,
+
+      playlistName: null,
+      playlistInfo: null,
     };
 
     this.toggleSearching = this.toggleSearching.bind(this);
@@ -70,6 +74,9 @@ class App extends Component {
     this.handleSelectingDevice = this.handleSelectingDevice.bind(this);
     this.handleSendingTracksToDevice = this.handleSendingTracksToDevice.bind(this);
     this.handleRecommendations = this.handleRecommendations.bind(this);
+    this.getUserInfoFromSpotify = this.getUserInfoFromSpotify.bind(this);
+    this.handleUpdatingPlaylistName = this.handleUpdatingPlaylistName.bind(this);
+    this.handleCreatingPlaylist = this.handleCreatingPlaylist.bind(this);
 
     this.getRecommendationsFromSpotify = debounce(this.getRecommendationsFromSpotify, 500);
     this.getTopTracksFromSpotify = this.getTopTracksFromSpotify.bind(this);
@@ -88,6 +95,8 @@ class App extends Component {
         isAuthenticated: false,
       });
     }
+
+    this.getUserInfoFromSpotify();
     
   }
 
@@ -97,20 +106,10 @@ class App extends Component {
         limit: 9,
         time_range: 'short_term'
       });
-      // const mediumTermTracks = await spotifyApi.getMyTopTracks({
-      //   limit: 3,
-      //   time_range: 'medium_term'
-      // });
-      // const longTermTracks = await spotifyApi.getMyTopTracks({
-      //   limit: 3,
-      //   time_range: 'long_term'
-      // });
   
       this.setState({
         topTracks: [
           ...shortTermTracks.items,
-          // ...mediumTermTracks.items,
-          // ...longTermTracks.items
         ]
       });
     }
@@ -122,23 +121,24 @@ class App extends Component {
         limit: 9,
         time_range: 'short_term'
       });
-      // const mediumTermArtists = await spotifyApi.getMyTopArtists({
-      //   limit: 3,
-      //   time_range: 'medium_term'
-      // });
-      // const longTermArtists = await spotifyApi.getMyTopArtists({
-      //   limit: 3,
-      //   time_range: 'long_term'
-      // });
   
       this.setState({
         topArtists: [
           ...shortTermArtists.items,
-          // ...mediumTermArtists.items,
-          // ...longTermArtists.items
         ]
       });
     }
+  }
+
+  getUserInfoFromSpotify() {
+    spotifyApi.getMe()
+      .then(data => {
+        this.setState({
+          spotifyUserInfo: data
+        });
+      }, err => {
+        console.error(err);
+      });
   }
 
   toggleSearching() {
@@ -202,7 +202,13 @@ class App extends Component {
     const updatedState = {};
     updatedState[type] = event.target.value;
     this.setState(updatedState);
-    this.handleRecommendations();
+
+    if (this.state.trackSeeds.length
+        || this.state.artistSeeds.length
+        || this.state.albumSeeds.length
+        || this.state.playlistSeeds.length) {
+          this.handleRecommendations();
+        }
   }
 
   handleTuningsToggle(event) {
@@ -293,7 +299,27 @@ class App extends Component {
         name: device.name,
       }
     })
-    
+  }
+
+  handleUpdatingPlaylistName(event) {
+    this.setState({
+      playlistName: event.target.value
+    });
+  }
+
+  handleCreatingPlaylist() {
+    spotifyApi.createPlaylist(this.state.spotifyUserInfo.id, {
+      name: this.state.playlistName ? this.state.playlistName : 'playlistify.me'
+    })
+    .then(data => {
+      this.setState({
+        playlistInfo: data
+      });
+      spotifyApi.addTracksToPlaylist(data.id, this.state.recommendedTrackList.map(track => `spotify:track:${track.id}`));
+    }, err => {
+      console.error(err);
+    });
+
   }
 
   render() {
@@ -313,7 +339,7 @@ class App extends Component {
           {this.state.isAuthenticated &&
             <div>
               <div className="flex mb-4">
-                <div className="p-4 bg-white rounded-lg shadow-md w-1/5">
+                <div className="p-4 bg-white rounded-lg shadow-md w-1/4">
                   <Tunings handleTuningsAdjustment={this.handleTuningsAdjustment}
                     handleTuningsToggle={this.handleTuningsToggle} 
                     isAcousticness={this.state.isAcousticness}
@@ -325,7 +351,7 @@ class App extends Component {
                     isValence={this.state.isValence}
                     />
                 </div>
-                <div className="p-4 bg-white rounded-lg shadow-md w-3/5 ml-4">
+                <div className="p-4 bg-white rounded-lg shadow-md w-1/2 ml-4">
                   {!this.state.isSearching && (
                     <div className="flex flex-col items-center">
                       <Seeds trackSeeds={this.state.trackSeeds}
@@ -352,7 +378,12 @@ class App extends Component {
                   handleSelectingDevice={this.handleSelectingDevice}
                   handleSendingTracksToDevice={this.handleSendingTracksToDevice}
                   devices={this.state.devices}
-                  chosenDevice={this.state.chosenDevice}/>
+                  chosenDevice={this.state.chosenDevice}
+                  spotifyUserInfo={this.state.spotifyUserInfo}
+                  handleUpdatingPlaylistName={this.handleUpdatingPlaylistName} 
+                  handleCreatingPlaylist={this.handleCreatingPlaylist} 
+                  recommendedTrackList={this.state.recommendedTrackList} 
+                  playlistInfo={this.state.playlistInfo} />
               </div>
               <TrackList recommendedTrackList={this.state.recommendedTrackList} />
             </div>
