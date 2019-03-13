@@ -15,9 +15,13 @@ class Player extends React.Component {
 
   render() {
     return (
-      <div className="p-4 bg-white rounded-lg shadow-md w-1/5 ml-4">
+      <div className="p-4 bg-white rounded-lg shadow-md w-1/4 ml-4">
         <h3 className="mb-4 text-center">Player</h3>
-        {this.props.devices.length > 0 && this.props.spotifyUserInfo.product === "premium" && (
+        {this.props.devices.length > 0 
+          && this.props.spotifyUserInfo.product === "premium" 
+          && this.props.recommendedTrackList
+          && this.props.recommendedTrackList.length > 0
+          && (
           <div>
             <div className={this.state.isChoosingDevice ? "p-4 rounded shadow-md mb-4" : ""}>
             {!this.state.isChoosingDevice && (
@@ -31,7 +35,8 @@ class Player extends React.Component {
                 {this.props.chosenDevice ? this.props.chosenDevice.name : 'Choose a device'}
               </button>
             )}
-            {this.state.isChoosingDevice && this.props.devices.length > 0 && (
+            {this.state.isChoosingDevice
+              && this.props.devices.length > 0 && (
               <ul className="list-reset">
                 {this.props.devices.length > 0 && this.props.devices.map((device, idx, arr) => {
                   const isLast = arr.length - 1 === idx;
@@ -53,13 +58,28 @@ class Player extends React.Component {
               </ul>
             )}
           </div>
-            <button className="bg-pink-lighter rounded p-4 shadow-md w-full"
+            <button className="bg-pink-lighter rounded p-4 shadow-md w-full mb-8"
               onClick={this.props.handleSendingTracksToDevice}>
-              Play Track List
+              Send Tracks to Device
+            </button>
+          </div>
+        )}
+        {this.props.recommendedTrackList 
+          && this.props.recommendedTrackList.length > 0
+          && (
+          <div>
+            <input className="p-2 rounded shadow-md w-full mb-4"
+              type="text"
+              placeholder="name your playlist..."
+              onChange={this.props.handleUpdatingPlaylistName} />
+            <button className="bg-pink-lighter rounded p-4 shadow-md w-full mb-8"
+              onClick={this.props.handleCreatingPlaylist}>
+              Save Playlist
             </button>
           </div>
         )}
       </div>
+      
     )
   }
 }
