@@ -4,9 +4,9 @@
 
 
 /* My custom CSS here */
-body {
+/* body {
   background-color: #f8fafc;
-}
+} */
 
 .seed-item-cancel-button {
   transition: visibility 250ms, opacity 250ms;
@@ -15,4 +15,18 @@ body {
 .seed-item:hover .seed-item-cancel-button {
   visibility: visible;
   opacity: 1;
+}
+
+.top-suggestions-headline {
+  position: relative;
+}
+
+.top-suggestions-headline::after {
+  position: absolute;
+  width: 100%;
+  content: '';
+  height: 1px;
+  background-color: #c9d8e4;
+  bottom: -8px;
+  left: 0;
 }

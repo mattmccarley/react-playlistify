@@ -330,8 +330,8 @@ class App extends Component {
             <h1>playlistify.me</h1>
           </div>
         </div>
-        <div className="relative min-h-screen bg-grey-lighter">
-          <div className="container mx-auto pt-4">
+        <div className="relative min-h-screen bg-grey-lighter pt-8">
+          <div className="container mx-auto">
           {!this.state.isAuthenticated && 
               <ConnectWithSpotify/>
           }
