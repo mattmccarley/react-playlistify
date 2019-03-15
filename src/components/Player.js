@@ -18,6 +18,7 @@ class Player extends React.Component {
       <div className="p-4 bg-white rounded-lg shadow-md w-1/4 ml-4">
         <h3 className="mb-4 text-center">Player</h3>
         {this.props.devices.length > 0 
+          && this.props.spotifyUserInfo
           && this.props.spotifyUserInfo.product === "premium" 
           && this.props.recommendedTrackList
           && this.props.recommendedTrackList.length > 0
