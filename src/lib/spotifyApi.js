@@ -63,3 +63,44 @@ export async function getTopArtists(authToken) {
   return [...shortTermArtists.items];
 }
 
+export async function getRecommendations(authToken, options) {
+  setAuthToken(authToken);
+
+  const recommendedTracks = await spotifyApi.getRecommendations(options);
+
+  return recommendedTracks;
+}
+
+export async function getSpotifyDevices(authToken) {
+  setAuthToken(authToken);
+
+  const myDevices = await spotifyApi.getMyDevices();
+
+  return myDevices;
+}
+
+export function sendTracksToDevice(authToken, deviceId, trackList) {
+  spotifyApi.setAccessToken(authToken);
+
+  spotifyApi.play({
+    device_id: deviceId,
+    uris: trackList
+  });
+}
+
+export async function createPlaylist(authToken, userId, playlistName) {
+  spotifyApi.setAccessToken(authToken);
+
+  const playlistInfo = await spotifyApi.createPlaylist(userId, {
+    name: playlistName
+  });
+
+  return playlistInfo;
+}
+
+export function addTracksToPlaylist(authToken, playlistId, trackUris) {
+  spotifyApi.setAccessToken(authToken);
+
+  spotifyApi.addTracksToPlaylist(playlistId, trackUris);
+} 
+

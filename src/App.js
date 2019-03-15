@@ -16,8 +16,12 @@ import {
   collectTrackIdsFromSeeds,
   getUserInfo,
   getTopTracks,
-  getTopArtists } from './lib/spotifyApi';
-import { timingSafeEqual } from 'crypto';
+  getTopArtists,
+  getRecommendations,
+  getSpotifyDevices,
+  sendTracksToDevice,
+  createPlaylist,
+  addTracksToPlaylist} from './lib/spotifyApi';
 
 class App extends Component {
   constructor(props) {
@@ -57,9 +61,6 @@ class App extends Component {
 
       recommendations: [],
 
-      trackIds: [],
-      artistIds: [],
-
       recommendedTrackList: null,
 
       devices: [],
@@ -72,19 +73,22 @@ class App extends Component {
     this.toggleSearching = this.toggleSearching.bind(this);
     this.handleSeedRemoval = this.handleSeedRemoval.bind(this);
     this.handleSeedSelection = this.handleSeedSelection.bind(this);
-    // this.handleTrackSelection = this.handleTrackSelection.bind(this);
-    // this.handleArtistSelection = this.handleArtistSelection.bind(this);
-    // this.handleAlbumSelection = this.handleAlbumSelection.bind(this);
-    // this.handlePlaylistSelection = this.handlePlaylistSelection.bind(this);
+
     this.handleTuningsToggle = this.handleTuningsToggle.bind(this);
     this.handleTuningsAdjustment = this.handleTuningsAdjustment.bind(this);
+
     this.handleGettingSpotifyDevices = this.handleGettingSpotifyDevices.bind(this);
     this.handleSelectingDevice = this.handleSelectingDevice.bind(this);
     this.handleSendingTracksToDevice = this.handleSendingTracksToDevice.bind(this);
+
+    this.buildRecommendationsOptions = this.buildRecommendationsOptions.bind(this);
     this.handleRecommendations = this.handleRecommendations.bind(this);
+
     this.getUserInfoFromSpotify = this.getUserInfoFromSpotify.bind(this);
+
     this.handleUpdatingPlaylistName = this.handleUpdatingPlaylistName.bind(this);
     this.handleCreatingPlaylist = this.handleCreatingPlaylist.bind(this);
+
     this.getSeedSuggestions = this.getSeedSuggestions.bind(this);
 
     this.getRecommendationsFromSpotify = debounce(this.getRecommendationsFromSpotify, 500);
@@ -202,19 +206,15 @@ class App extends Component {
     this.setState(newState);
   }
 
-  async getRecommendationsFromSpotify() {
+  async buildRecommendationsOptions() {
     const trackIds = await collectTrackIdsFromSeeds(this.state.albumSeeds, this.state.playlistSeeds, this.state.trackSeeds);
     const artistIds = this.state.artistSeeds.map(artist => artist.id);
-    this.setState({
-      trackIds,
-      artistIds,
-    });
 
     const recommendationsOptions = {
-      seed_artists: this.state.artistIds,
-      seed_tracks: this.state.trackIds,
+      seed_artists: artistIds,
+      seed_tracks: trackIds,
     }
-
+  
     if (this.state.acousticness) {
       recommendationsOptions.target_acousticness = this.state.acousticness;
     }
@@ -236,15 +236,20 @@ class App extends Component {
     if (this.state.valence) {
       recommendationsOptions.target_valence = this.state.valence;
     }
-    if (recommendationsOptions.seed_artists.length > 0 || recommendationsOptions.seed_tracks.length > 0) {
-      spotifyApi.getRecommendations(recommendationsOptions)
-        .then((data) => {
-          this.setState({
-            recommendedTrackList: data.tracks,
-          })
-        }, (err) => {
-          console.error(err);
-        });
+
+    return recommendationsOptions;
+  }
+
+  async getRecommendationsFromSpotify() {
+
+    const options = await this.buildRecommendationsOptions();
+
+    if (options.seed_artists.length > 0 || options.seed_tracks.length > 0) {
+      const recommendedTrackList = await getRecommendations(this.state.accessToken, options);
+      this.setState({
+        recommendedTrackList: recommendedTrackList.tracks
+      });
+
     } else {
       this.setState({
         recommendedTrackList: []
@@ -256,22 +261,20 @@ class App extends Component {
     this.getRecommendationsFromSpotify();
   }
 
-  handleGettingSpotifyDevices() {
-    spotifyApi.getMyDevices()
-      .then((data) => {
-        this.setState({
-          devices: data.devices,
-        })
-      }, (err) => {
-        console.error(err);
-      })
+  async handleGettingSpotifyDevices() {
+    const myDevices = await getSpotifyDevices(this.state.accessToken);
+    
+    this.setState({
+      devices: myDevices.devices,
+    });
   }
 
   handleSendingTracksToDevice() {
-    spotifyApi.play({
-      device_id: this.state.chosenDevice.id,
-      uris: this.state.recommendedTrackList.map(track => `spotify:track:${track.id}`),
-    })
+    const authToken = this.state.accessToken;
+    const deviceId = this.state.chosenDevice.id;
+    const trackList = this.state.recommendedTrackList.map(track => `spotify:track:${track.id}`);
+
+    sendTracksToDevice(authToken, deviceId, trackList);
   }
 
   handleSelectingDevice(device) {
@@ -289,19 +292,17 @@ class App extends Component {
     });
   }
 
-  handleCreatingPlaylist() {
-    spotifyApi.createPlaylist(this.state.spotifyUserInfo.id, {
-      name: this.state.playlistName ? this.state.playlistName : 'playlistify.me'
-    })
-    .then(data => {
-      this.setState({
-        playlistInfo: data
-      });
-      spotifyApi.addTracksToPlaylist(data.id, this.state.recommendedTrackList.map(track => `spotify:track:${track.id}`));
-    }, err => {
-      console.error(err);
-    });
+  async handleCreatingPlaylist() {
+    const authToken = this.state.accessToken;
+    const userId = this.state.spotifyUserInfo.id;
+    const playlistName = this.state.playlistName ? this.state.playlistName : 'playlistify.me';
 
+    const playlistInfo = await createPlaylist(authToken, userId, playlistName);
+    
+    const playlistId = playlistInfo.id;
+    const trackUris = this.state.recommendedTrackList.map(track => `spotify:track:${track.id}`);
+
+    addTracksToPlaylist(authToken, playlistId, trackUris);
   }
 
   render() {
