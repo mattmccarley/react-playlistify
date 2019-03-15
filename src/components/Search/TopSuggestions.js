@@ -1,15 +1,20 @@
 import React from 'react';
 
-const TopSuggestions = ({topTracks, handleTrackSelection, topArtists, handleArtistSelection}) => {
+const TopSuggestions = ({
+                          topTracks, 
+                          topArtists,
+                          // handleTrackSelection,
+                          // handleArtistSelection,
+                          handleSeedSelection}) => {
   return (
     <div>
       <h3 className="top-suggestions-headline mb-4">My Top Tracks</h3>
       <div className="flex flex-wrap w-full justify-center mb-8">
         {topTracks && topTracks.map(track => (
-          <div className="w-1/3 p-2">
+          <div className="w-1/3 p-2"
+            key={track.id}>
             <div className="bg-white rounded shadow-md flex items-center p-4 cursor-pointer"
-              key={track.id}
-              onClick={() => handleTrackSelection(track)}>
+              onClick={() => handleSeedSelection(track, 'track')}>
               <img 
                 className="w-16 h-16 mr-4"
                 src={track.album.images[1] ? track.album.images[1].url : ''}
@@ -26,10 +31,10 @@ const TopSuggestions = ({topTracks, handleTrackSelection, topArtists, handleArti
       <h3 className="top-suggestions-headline mb-4">My Top Artists</h3>
       <div className="flex flex-wrap w-full justify-center">
         {topArtists && topArtists.map(artist => (
-          <div className="w-1/3 p-2">
+          <div className="w-1/3 p-2"
+            key={artist.id}>
             <div className="cursor-pointer bg-white rounded shadow-md flex items-center p-4"
-              key={artist.id}
-              onClick={() => handleArtistSelection(artist)}>
+              onClick={() => handleSeedSelection(artist, 'artist')}>
               <img 
                 className="w-16 h-16 mr-4 rounded-full"
                 src={artist.images[1] ? artist.images[1].url : ''}

@@ -54,9 +54,10 @@ class Search extends React.Component {
         {!this.state.searchResults && 
         <div className="container mx-auto">
           <TopSuggestions topTracks={this.props.topTracks}
-            handleTrackSelection={this.props.handleTrackSelection}
             topArtists={this.props.topArtists}
-            handleArtistSelection={this.props.handleArtistSelection} />
+            // handleTrackSelection={this.props.handleTrackSelection}
+            // handleArtistSelection={this.props.handleArtistSelection} 
+            handleSeedSelection={this.props.handleSeedSelection}/>
         </div>
         }
 
@@ -68,7 +69,7 @@ class Search extends React.Component {
               {this.state.searchResults.tracks && this.state.searchResults.tracks.items.map(item => (
                 <TrackResult item={item}
                   key={item.id}
-                  handleTrackSelection={this.props.handleTrackSelection}/>
+                  handleSeedSelection={this.props.handleSeedSelection}/>
               ))}
             </ul>
           </div>
@@ -78,7 +79,7 @@ class Search extends React.Component {
               {this.state.searchResults.artists && this.state.searchResults.artists.items.map(item => (
                 <ArtistResult item={item}
                   key={item.id} 
-                  handleArtistSelection={this.props.handleArtistSelection} />
+                  handleSeedSelection={this.props.handleSeedSelection} />
               ))}
             </ul>
           </div>
@@ -88,7 +89,7 @@ class Search extends React.Component {
               {this.state.searchResults.albums && this.state.searchResults.albums.items.map(item => (
                 <AlbumResult item={item}
                   key={item.id} 
-                  handleAlbumSelection={this.props.handleAlbumSelection} />
+                  handleSeedSelection={this.props.handleSeedSelection} />
               ))}
             </ul>
           </div>
@@ -98,7 +99,7 @@ class Search extends React.Component {
               {this.state.searchResults.playlists && this.state.searchResults.playlists.items.map(item => (
                 <PlaylistResult item={item}
                   key={item.id}
-                  handlePlaylistSelection={this.props.handlePlaylistSelection} />
+                  handleSeedSelection={this.props.handleSeedSelection} />
               ))}
             </ul>
           </div>

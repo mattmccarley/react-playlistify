@@ -10,19 +10,26 @@ import Player from './components/Player';
 
 import {debounce} from 'lodash';
 import {getHashParams} from './lib/helpers';
-import {spotifyApi, collectTrackIdsFromSeeds} from './lib/spotifyApi';
+import {
+  spotifyApi,
+  setAuthToken,
+  collectTrackIdsFromSeeds,
+  getUserInfo,
+  getTopTracks,
+  getTopArtists } from './lib/spotifyApi';
+import { timingSafeEqual } from 'crypto';
 
 class App extends Component {
   constructor(props) {
     super(props);
 
-    const PARAMS = getHashParams();
-
     this.state = {
-      isSearching: false,
       isAuthenticated: false,
-      accessToken: PARAMS.access_token,
+      accessToken: getHashParams().access_token,
+      
       spotifyUserInfo: null,
+      
+      isSearching: false,
 
       acousticness: null,
       danceability: null,
@@ -64,10 +71,11 @@ class App extends Component {
 
     this.toggleSearching = this.toggleSearching.bind(this);
     this.handleSeedRemoval = this.handleSeedRemoval.bind(this);
-    this.handleTrackSelection = this.handleTrackSelection.bind(this);
-    this.handleArtistSelection = this.handleArtistSelection.bind(this);
-    this.handleAlbumSelection = this.handleAlbumSelection.bind(this);
-    this.handlePlaylistSelection = this.handlePlaylistSelection.bind(this);
+    this.handleSeedSelection = this.handleSeedSelection.bind(this);
+    // this.handleTrackSelection = this.handleTrackSelection.bind(this);
+    // this.handleArtistSelection = this.handleArtistSelection.bind(this);
+    // this.handleAlbumSelection = this.handleAlbumSelection.bind(this);
+    // this.handlePlaylistSelection = this.handlePlaylistSelection.bind(this);
     this.handleTuningsToggle = this.handleTuningsToggle.bind(this);
     this.handleTuningsAdjustment = this.handleTuningsAdjustment.bind(this);
     this.handleGettingSpotifyDevices = this.handleGettingSpotifyDevices.bind(this);
@@ -77,6 +85,7 @@ class App extends Component {
     this.getUserInfoFromSpotify = this.getUserInfoFromSpotify.bind(this);
     this.handleUpdatingPlaylistName = this.handleUpdatingPlaylistName.bind(this);
     this.handleCreatingPlaylist = this.handleCreatingPlaylist.bind(this);
+    this.getSeedSuggestions = this.getSeedSuggestions.bind(this);
 
     this.getRecommendationsFromSpotify = debounce(this.getRecommendationsFromSpotify, 500);
     this.getTopTracksFromSpotify = this.getTopTracksFromSpotify.bind(this);
@@ -84,61 +93,62 @@ class App extends Component {
   }
   
   componentWillMount() {
+    /* 
+      remove the params from the url because they should have already been
+      grabbed in the constructor
+    */
     window.history.pushState({}, document.title, "/");
+
+    // check if the accessToken has been set in state
     if (this.state.accessToken) {
       this.setState({
         isAuthenticated: true,
       });
-      spotifyApi.setAccessToken(this.state.accessToken);
+      setAuthToken(this.state.accessToken);
     } else {
       this.setState({
         isAuthenticated: false,
       });
     }
 
-    this.getUserInfoFromSpotify();
+    if (this.state.accessToken) {
+      this.getUserInfoFromSpotify(this.state.accessToken);
+    }
     
   }
 
   async getTopTracksFromSpotify() {
-    if (this.state.topTracks === null) {
-      const shortTermTracks = await spotifyApi.getMyTopTracks({
-        limit: 9,
-        time_range: 'short_term'
-      });
-  
-      this.setState({
-        topTracks: [
-          ...shortTermTracks.items,
-        ]
-      });
-    }
+    const shortTermTracks = await getTopTracks(this.state.accessToken);
+
+    this.setState({
+      topTracks: shortTermTracks
+    });
   }
 
   async getTopArtistsFromSpotify() {
-    if (this.state.topArtists === null) {
-      const shortTermArtists = await spotifyApi.getMyTopArtists({
-        limit: 9,
-        time_range: 'short_term'
-      });
-  
-      this.setState({
-        topArtists: [
-          ...shortTermArtists.items,
-        ]
-      });
-    }
+    const shortTermArtists = await getTopArtists(this.state.accessToken);
+
+    this.setState({
+      topArtists: shortTermArtists
+    });
   }
 
-  getUserInfoFromSpotify() {
-    spotifyApi.getMe()
-      .then(data => {
-        this.setState({
-          spotifyUserInfo: data
-        });
-      }, err => {
-        console.error(err);
-      });
+  async getUserInfoFromSpotify() {
+    const userInfo = await getUserInfo(this.state.accessToken);
+    
+    this.setState({
+      spotifyUserInfo: userInfo
+    });
+  }
+
+  getSeedSuggestions() {
+    if (this.state.topTracks === null) {
+      this.getTopTracksFromSpotify();
+    }
+    
+    if (this.state.topArtists === null) {
+      this.getTopArtistsFromSpotify();
+    }
   }
 
   toggleSearching() {
@@ -146,8 +156,7 @@ class App extends Component {
       isSearching: !this.state.isSearching,
     });
 
-    this.getTopTracksFromSpotify();
-    this.getTopArtistsFromSpotify();
+    this.getSeedSuggestions();
   }
 
   handleSeedRemoval(seed, seedType) {
@@ -158,43 +167,16 @@ class App extends Component {
     this.handleRecommendations();
   }
 
-  handleTrackSelection(track) {
-    if (!this.state.trackSeeds.map(track => track.id).includes(track.id)) {
-      this.setState(prevState => ({
-        trackSeeds: [...prevState.trackSeeds, track],
-        isSearching: false,
-      }));
-      this.handleRecommendations();
-    }
-  }
-
-  handleArtistSelection(artist) {
-    if (!this.state.artistSeeds.includes(artist)) {
-      this.setState(prevState => ({
-        artistSeeds: [...prevState.artistSeeds, artist],
-        isSearching: false,
-      }));
-      this.handleRecommendations();
-    }
-  }
-
-  handleAlbumSelection(album) {
-    if (!this.state.albumSeeds.includes(album)) {
-      this.setState(prevState => ({
-        albumSeeds: [...prevState.albumSeeds, album],
-        isSearching: false,
-      }));
-      this.handleRecommendations();
-    }
-  }
-
-  handlePlaylistSelection(playlist) {
-    if (!this.state.playlistSeeds.includes(playlist)) {
-      this.setState(prevState => ({
-        playlistSeeds: [...prevState.playlistSeeds, playlist],
-        isSearching: false,
-      }));
-      this.handleRecommendations();
+  handleSeedSelection(seed, seedType) {
+    const seedLocation = `${seedType}Seeds`;
+    if (!this.state[seedLocation].includes(seed)) {
+      this.setState(prevState => {
+        const newState = {};
+        newState[seedLocation] = [...prevState[seedLocation], seed];
+        newState.isSearching = false;
+        this.setState(newState);
+        this.handleRecommendations();
+      })
     }
   }
 
@@ -367,11 +349,8 @@ class App extends Component {
                     <Search accessToken={this.state.accessToken}
                       toggleSearching={this.toggleSearching}
                       topTracks={this.state.topTracks}
-                      topArtists={this.state.topArtists}
-                      handleTrackSelection={this.handleTrackSelection}
-                      handleArtistSelection={this.handleArtistSelection} 
-                      handleAlbumSelection={this.handleAlbumSelection} 
-                      handlePlaylistSelection={this.handlePlaylistSelection} />
+                      topArtists={this.state.topArtists} 
+                      handleSeedSelection={this.handleSeedSelection}/>
                   }
                 </div>
                 <Player handleGettingSpotifyDevices={this.handleGettingSpotifyDevices}
