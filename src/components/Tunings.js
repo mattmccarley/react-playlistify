@@ -17,8 +17,8 @@ class Tunings extends React.Component {
       isPopularity,
       isValence
     } = this.props;
-    const inactiveButtonClasses = "bg-grey-lighter shadow-md rounded p-2 w-full mb-4";
-    const activeButtonClasses = "bg-pink-lighter shadow-md rounded p-2 w-full mb-4";
+    const inactiveButtonClasses = "bg-grey-lightest shadow-md rounded p-2 w-full mb-4";
+    const activeButtonClasses = "bg-purple-darker text-white shadow-md rounded p-2 w-full mb-4";
     
     return (
       <div>

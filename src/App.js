@@ -7,6 +7,7 @@ import Tunings from './components/Tunings';
 import Seeds from './components/Seeds/Seeds';
 import TrackList from './components/TrackList';
 import Player from './components/Player';
+import Logo from './images/playlistify-header-logo.svg';
 
 import {debounce} from 'lodash';
 import {getHashParams} from './lib/helpers';
@@ -308,12 +309,12 @@ class App extends Component {
   render() {
     return (
       <div>
-        <div className="bg-pink-lighter p-4">
+        <div className="p-4">
           <div className="container mx-auto">
-            <h1>playlistify.me</h1>
+            <img src={Logo} alt=""/>
           </div>
         </div>
-        <div className="relative min-h-screen bg-grey-lighter pt-8">
+        <div className="relative min-h-screen bg-grey-lightest pt-8">
           <div className="container mx-auto">
           {!this.state.isAuthenticated && 
               <ConnectWithSpotify/>

@@ -3,8 +3,8 @@ import {generateRandomString} from './helpers';
 export function handleAuthentication() {
   const CLIENT_ID = '751a96a5ff724e08b2e97db9141f9e84';
   const RESPONSE_TYPE = 'token';
-  const REDIRECT_URI = 'https://playlistify.netlify.com/callback';
-  // const REDIRECT_URI = 'http://localhost:3000/callback';
+  // const REDIRECT_URI = 'https://playlistify.netlify.com/callback';
+  const REDIRECT_URI = 'http://localhost:3000/callback';
   const STATE = generateRandomString(16);
   localStorage.setItem('spotify_auth_state', STATE);
   
