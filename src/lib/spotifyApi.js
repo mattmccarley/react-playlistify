@@ -7,7 +7,6 @@ export function setAuthToken(authToken) {
 }
 
 export async function collectTrackIdsFromSeeds(albumSeeds, playlistSeeds, trackSeeds) {
-
   const tracksFromAlbumSeeds = await Promise.all(albumSeeds.map(async (album) => {
     const numberOfTracks = album.total_tracks;
     const randomTrackNumber = Math.floor(Math.random() * numberOfTracks);

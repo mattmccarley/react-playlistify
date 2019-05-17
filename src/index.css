@@ -547,7 +547,7 @@ table {
   background-color: #bcccdc;
 }
 
-.bg-grey-lightest {
+.bg-grey-lighter {
   background-color: #d9e2ec;
 }
 
@@ -771,15 +771,15 @@ table {
   background-color: #7069fa;
 }
 
-.bg-purple-darker text-white {
+.bg-purple-light {
   background-color: #a2a5fc;
 }
 
-.bg-purple-darker text-whiteer {
+.bg-purple-lighter {
   background-color: #c4c6ff;
 }
 
-.bg-purple-darker text-white {
+.bg-purple-lightest {
   background-color: #e6e6ff;
 }
 
@@ -839,7 +839,7 @@ table {
   background-color: #bcccdc;
 }
 
-.hover\:bg-grey-lightest:hover {
+.hover\:bg-grey-lighter:hover {
   background-color: #d9e2ec;
 }
 
@@ -1063,15 +1063,15 @@ table {
   background-color: #7069fa;
 }
 
-.hover\:bg-purple-darker text-white:hover {
+.hover\:bg-purple-light:hover {
   background-color: #a2a5fc;
 }
 
-.hover\:bg-purple-darker text-whiteer:hover {
+.hover\:bg-purple-lighter:hover {
   background-color: #c4c6ff;
 }
 
-.hover\:bg-purple-darker text-white:hover {
+.hover\:bg-purple-lightest:hover {
   background-color: #e6e6ff;
 }
 
@@ -1131,7 +1131,7 @@ table {
   background-color: #bcccdc;
 }
 
-.focus\:bg-grey-lightest:focus {
+.focus\:bg-grey-lighter:focus {
   background-color: #d9e2ec;
 }
 
@@ -1355,15 +1355,15 @@ table {
   background-color: #7069fa;
 }
 
-.focus\:bg-purple-darker text-white:focus {
+.focus\:bg-purple-light:focus {
   background-color: #a2a5fc;
 }
 
-.focus\:bg-purple-darker text-whiteer:focus {
+.focus\:bg-purple-lighter:focus {
   background-color: #c4c6ff;
 }
 
-.focus\:bg-purple-darker text-white:focus {
+.focus\:bg-purple-lightest:focus {
   background-color: #e6e6ff;
 }
 
@@ -6264,7 +6264,7 @@ body {
     background-color: #bcccdc;
   }
 
-  .sm\:bg-grey-lightest {
+  .sm\:bg-grey-lighter {
     background-color: #d9e2ec;
   }
 
@@ -6488,15 +6488,15 @@ body {
     background-color: #7069fa;
   }
 
-  .sm\:bg-purple-darker text-white {
+  .sm\:bg-purple-light {
     background-color: #a2a5fc;
   }
 
-  .sm\:bg-purple-darker text-whiteer {
+  .sm\:bg-purple-lighter {
     background-color: #c4c6ff;
   }
 
-  .sm\:bg-purple-darker text-white {
+  .sm\:bg-purple-lightest {
     background-color: #e6e6ff;
   }
 
@@ -6556,7 +6556,7 @@ body {
     background-color: #bcccdc;
   }
 
-  .sm\:hover\:bg-grey-lightest:hover {
+  .sm\:hover\:bg-grey-lighter:hover {
     background-color: #d9e2ec;
   }
 
@@ -6780,15 +6780,15 @@ body {
     background-color: #7069fa;
   }
 
-  .sm\:hover\:bg-purple-darker text-white:hover {
+  .sm\:hover\:bg-purple-light:hover {
     background-color: #a2a5fc;
   }
 
-  .sm\:hover\:bg-purple-darker text-whiteer:hover {
+  .sm\:hover\:bg-purple-lighter:hover {
     background-color: #c4c6ff;
   }
 
-  .sm\:hover\:bg-purple-darker text-white:hover {
+  .sm\:hover\:bg-purple-lightest:hover {
     background-color: #e6e6ff;
   }
 
@@ -6848,7 +6848,7 @@ body {
     background-color: #bcccdc;
   }
 
-  .sm\:focus\:bg-grey-lightest:focus {
+  .sm\:focus\:bg-grey-lighter:focus {
     background-color: #d9e2ec;
   }
 
@@ -7072,15 +7072,15 @@ body {
     background-color: #7069fa;
   }
 
-  .sm\:focus\:bg-purple-darker text-white:focus {
+  .sm\:focus\:bg-purple-light:focus {
     background-color: #a2a5fc;
   }
 
-  .sm\:focus\:bg-purple-darker text-whiteer:focus {
+  .sm\:focus\:bg-purple-lighter:focus {
     background-color: #c4c6ff;
   }
 
-  .sm\:focus\:bg-purple-darker text-white:focus {
+  .sm\:focus\:bg-purple-lightest:focus {
     background-color: #e6e6ff;
   }
 
@@ -11900,7 +11900,7 @@ body {
     background-color: #bcccdc;
   }
 
-  .md\:bg-grey-lightest {
+  .md\:bg-grey-lighter {
     background-color: #d9e2ec;
   }
 
@@ -12124,15 +12124,15 @@ body {
     background-color: #7069fa;
   }
 
-  .md\:bg-purple-darker text-white {
+  .md\:bg-purple-light {
     background-color: #a2a5fc;
   }
 
-  .md\:bg-purple-darker text-whiteer {
+  .md\:bg-purple-lighter {
     background-color: #c4c6ff;
   }
 
-  .md\:bg-purple-darker text-white {
+  .md\:bg-purple-lightest {
     background-color: #e6e6ff;
   }
 
@@ -12192,7 +12192,7 @@ body {
     background-color: #bcccdc;
   }
 
-  .md\:hover\:bg-grey-lightest:hover {
+  .md\:hover\:bg-grey-lighter:hover {
     background-color: #d9e2ec;
   }
 
@@ -12416,15 +12416,15 @@ body {
     background-color: #7069fa;
   }
 
-  .md\:hover\:bg-purple-darker text-white:hover {
+  .md\:hover\:bg-purple-light:hover {
     background-color: #a2a5fc;
   }
 
-  .md\:hover\:bg-purple-darker text-whiteer:hover {
+  .md\:hover\:bg-purple-lighter:hover {
     background-color: #c4c6ff;
   }
 
-  .md\:hover\:bg-purple-darker text-white:hover {
+  .md\:hover\:bg-purple-lightest:hover {
     background-color: #e6e6ff;
   }
 
@@ -12484,7 +12484,7 @@ body {
     background-color: #bcccdc;
   }
 
-  .md\:focus\:bg-grey-lightest:focus {
+  .md\:focus\:bg-grey-lighter:focus {
     background-color: #d9e2ec;
   }
 
@@ -12708,15 +12708,15 @@ body {
     background-color: #7069fa;
   }
 
-  .md\:focus\:bg-purple-darker text-white:focus {
+  .md\:focus\:bg-purple-light:focus {
     background-color: #a2a5fc;
   }
 
-  .md\:focus\:bg-purple-darker text-whiteer:focus {
+  .md\:focus\:bg-purple-lighter:focus {
     background-color: #c4c6ff;
   }
 
-  .md\:focus\:bg-purple-darker text-white:focus {
+  .md\:focus\:bg-purple-lightest:focus {
     background-color: #e6e6ff;
   }
 
@@ -17536,7 +17536,7 @@ body {
     background-color: #bcccdc;
   }
 
-  .lg\:bg-grey-lightest {
+  .lg\:bg-grey-lighter {
     background-color: #d9e2ec;
   }
 
@@ -17760,15 +17760,15 @@ body {
     background-color: #7069fa;
   }
 
-  .lg\:bg-purple-darker text-white {
+  .lg\:bg-purple-light {
     background-color: #a2a5fc;
   }
 
-  .lg\:bg-purple-darker text-whiteer {
+  .lg\:bg-purple-lighter {
     background-color: #c4c6ff;
   }
 
-  .lg\:bg-purple-darker text-white {
+  .lg\:bg-purple-lightest {
     background-color: #e6e6ff;
   }
 
@@ -17828,7 +17828,7 @@ body {
     background-color: #bcccdc;
   }
 
-  .lg\:hover\:bg-grey-lightest:hover {
+  .lg\:hover\:bg-grey-lighter:hover {
     background-color: #d9e2ec;
   }
 
@@ -18052,15 +18052,15 @@ body {
     background-color: #7069fa;
   }
 
-  .lg\:hover\:bg-purple-darker text-white:hover {
+  .lg\:hover\:bg-purple-light:hover {
     background-color: #a2a5fc;
   }
 
-  .lg\:hover\:bg-purple-darker text-whiteer:hover {
+  .lg\:hover\:bg-purple-lighter:hover {
     background-color: #c4c6ff;
   }
 
-  .lg\:hover\:bg-purple-darker text-white:hover {
+  .lg\:hover\:bg-purple-lightest:hover {
     background-color: #e6e6ff;
   }
 
@@ -18120,7 +18120,7 @@ body {
     background-color: #bcccdc;
   }
 
-  .lg\:focus\:bg-grey-lightest:focus {
+  .lg\:focus\:bg-grey-lighter:focus {
     background-color: #d9e2ec;
   }
 
@@ -18344,15 +18344,15 @@ body {
     background-color: #7069fa;
   }
 
-  .lg\:focus\:bg-purple-darker text-white:focus {
+  .lg\:focus\:bg-purple-light:focus {
     background-color: #a2a5fc;
   }
 
-  .lg\:focus\:bg-purple-darker text-whiteer:focus {
+  .lg\:focus\:bg-purple-lighter:focus {
     background-color: #c4c6ff;
   }
 
-  .lg\:focus\:bg-purple-darker text-white:focus {
+  .lg\:focus\:bg-purple-lightest:focus {
     background-color: #e6e6ff;
   }
 
@@ -23172,7 +23172,7 @@ body {
     background-color: #bcccdc;
   }
 
-  .xl\:bg-grey-lightest {
+  .xl\:bg-grey-lighter {
     background-color: #d9e2ec;
   }
 
@@ -23396,15 +23396,15 @@ body {
     background-color: #7069fa;
   }
 
-  .xl\:bg-purple-darker text-white {
+  .xl\:bg-purple-light {
     background-color: #a2a5fc;
   }
 
-  .xl\:bg-purple-darker text-whiteer {
+  .xl\:bg-purple-lighter {
     background-color: #c4c6ff;
   }
 
-  .xl\:bg-purple-darker text-white {
+  .xl\:bg-purple-lightest {
     background-color: #e6e6ff;
   }
 
@@ -23464,7 +23464,7 @@ body {
     background-color: #bcccdc;
   }
 
-  .xl\:hover\:bg-grey-lightest:hover {
+  .xl\:hover\:bg-grey-lighter:hover {
     background-color: #d9e2ec;
   }
 
@@ -23688,15 +23688,15 @@ body {
     background-color: #7069fa;
   }
 
-  .xl\:hover\:bg-purple-darker text-white:hover {
+  .xl\:hover\:bg-purple-light:hover {
     background-color: #a2a5fc;
   }
 
-  .xl\:hover\:bg-purple-darker text-whiteer:hover {
+  .xl\:hover\:bg-purple-lighter:hover {
     background-color: #c4c6ff;
   }
 
-  .xl\:hover\:bg-purple-darker text-white:hover {
+  .xl\:hover\:bg-purple-lightest:hover {
     background-color: #e6e6ff;
   }
 
@@ -23756,7 +23756,7 @@ body {
     background-color: #bcccdc;
   }
 
-  .xl\:focus\:bg-grey-lightest:focus {
+  .xl\:focus\:bg-grey-lighter:focus {
     background-color: #d9e2ec;
   }
 
@@ -23980,15 +23980,15 @@ body {
     background-color: #7069fa;
   }
 
-  .xl\:focus\:bg-purple-darker text-white:focus {
+  .xl\:focus\:bg-purple-light:focus {
     background-color: #a2a5fc;
   }
 
-  .xl\:focus\:bg-purple-darker text-whiteer:focus {
+  .xl\:focus\:bg-purple-lighter:focus {
     background-color: #c4c6ff;
   }
 
-  .xl\:focus\:bg-purple-darker text-white:focus {
+  .xl\:focus\:bg-purple-lightest:focus {
     background-color: #e6e6ff;
   }
 
