@@ -7,7 +7,7 @@ import * as serviceWorker from './serviceWorker';
 
 setGlobal({
   isAuthenticated: false,
-  accessToken: getHashParams().access_token,
+  // accessToken: getHashParams().access_token,
   
   spotifyUserInfo: null,
   

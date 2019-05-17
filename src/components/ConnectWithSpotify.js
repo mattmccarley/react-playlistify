@@ -1,5 +1,16 @@
 import React from 'react'
-import {handleAuthentication} from '../lib/authentication';
+import axios from 'axios';
+
+import { generateRandomString } from '../lib/helpers';
+
+const handleAuthentication = async () => {
+  const spotify_auth_state = generateRandomString(16);
+  console.log(spotify_auth_state);
+  
+  const authenticationData = await axios.get(`/.netlify/functions/login?state=${spotify_auth_state}`);
+  
+  console.log(authenticationData);
+};
 
 const ConnectWithSpotify = () => {
   return (

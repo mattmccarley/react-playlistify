@@ -1,14 +1,14 @@
 import React, { useGlobal } from 'reactn';
 
-import ToggleSearchButton from './components/ToggleSearchButton';
-import Search from './components/Search/Search';
-import Tunings from './components/Tunings';
-import Seeds from './components/Seeds/Seeds';
-import TrackList from './components/TrackList';
-import Player from './components/Player';
+import ToggleSearchButton from './ToggleSearchButton';
+import Search from './Search/Search';
+import Tunings from './Tunings';
+import Seeds from './Seeds/Seeds';
+import TrackList from './TrackList';
+import Player from './Player';
 
 import {debounce} from 'lodash';
-import {getHashParams} from './lib/helpers';
+import {getHashParams} from '../lib/helpers';
 import {
   spotifyApi,
   setAuthToken,
@@ -20,7 +20,7 @@ import {
   getSpotifyDevices,
   sendTracksToDevice,
   createPlaylist,
-  addTracksToPlaylist} from './lib/spotifyApi';
+  addTracksToPlaylist} from '../lib/spotifyApi';
 
 const getTopTracksFromSpotify = async () => {
   const shortTermTracks = await getTopTracks(this.state.accessToken);
